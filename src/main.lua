@@ -19,8 +19,8 @@ function love.mousepressed( x, y, button, istouch, presses )
 end
 
 function love.load()
-    menu = Menu.new(300, 248)
     canvas = Canvas.new(WIDE - 300, HEIGHT)
+    menu = Menu.new(300, 248)
 end
 
 function love.update(dt)
