@@ -1,7 +1,7 @@
 local Slider = {}
 Slider.__index = Slider
 
-function Slider.new(wide, height, min_value, max_value, value, step, callback)
+function Slider.new(wide, height, min_value, max_value, value, step, click_callback)
     local s = {}
     setmetatable(s, Slider)
     -- Size
@@ -15,10 +15,10 @@ function Slider.new(wide, height, min_value, max_value, value, step, callback)
     -- Slider graphics
     s.amount_marks = (s.max_value - s.min_value) / s.step
     s.space_marks = s.wide / s.amount_marks
-    s.hover = false
     -- Return function
-    s.callback = callback or function() print('no function') end
+    s.click_callback = click_callback or function() print('no function') end
     -- Graphics
+    s.hover = false
     s.canvas = love.graphics.newCanvas(s.wide, s.height)
     s:draw_canvas()
     return s
@@ -49,5 +49,23 @@ function Slider.draw(self, x, y)
     love.graphics.draw(self.canvas, x, y);
 end
 
+function Slider.on_hover(self)
+    if not self.hover then
+        self.hover = true
+        self:draw_canvas()
+    end
+end
+
+function Slider.off_hover(self)
+    self.hover = false
+    self:draw_canvas()
+end
+
+function Slider.on_click(self, x, y)
+    local new_value = (math.floor((x / self.space_marks) + 0.5) + 1) * self.step
+    self.value = new_value
+    self:draw_canvas()
+    self.click_callback(new_value)
+end
 
 return Slider
